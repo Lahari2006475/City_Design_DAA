@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lahari Bankar | Algorithmic Engineer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Fira+Code:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Palette: Deep Space Navy + Amber & Rose Accents */
+            --bg-deep: #020617;
+            --glass-bg: rgba(30, 41, 59, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-primary: #f59e0b;
+            /* Amber */
+            --accent-secondary: #f43f5e;
+            /* Rose */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --code-bg: #0f172a;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Space Grotesk", sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- BACKGROUND CANVAS --- */
+        #network-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+        }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mono {
+            font-family: "Fira Code", monospace;
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-bar {
+            padding: 1.5rem 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--accent-primary);
+            transform: rotate(45deg);
+        }
+
+        .path-display {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 12px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            align-items: center;
+            opacity: 0;
+            animation: fadeUp 1s ease forwards 0.2s;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .role-label {
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .bio-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 1.5rem;
+        }
+
+        .id-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .id-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            position: relative;
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        /* --- MODULES --- */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 3rem 0 2rem;
+        }
+
+        .header-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .data-block {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .block-header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), transparent);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .block-title h3 {
+            font-size: 1.5rem;
+            color: #fff;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .status-pill {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        /* --- ACCORDION --- */
+        .expandable-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .expandable-item:last-child {
+            border-bottom: none;
+        }
+
+        .expandable-header {
+            padding: 1.2rem 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .expandable-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .problem-title {
+            font-size: 1rem;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .expand-icon {
+            transition: transform 0.3s;
+            color: var(--accent-primary);
+        }
+
+        .expandable-item.active .expand-icon {
+            transform: rotate(45deg);
+        }
+
+        .expandable-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+        }
+
+        .inner-content {
+            padding: 1.5rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .problem-desc {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .solution-tag {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* --- TERMINAL --- */
+        .terminal-block {
+            background: #0d1117;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            margin: 1rem 0;
+            font-family: "Fira Code", monospace;
+            font-size: 0.8rem;
+        }
+
+        .terminal-header-dots {
+            padding: 8px 12px;
+            background: #161b22;
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .red {
+            background: #ff5f56;
+        }
+
+        .yellow {
+            background: #ffbd2e;
+        }
+
+        .green {
+            background: #27c93f;
+        }
+
+        .terminal-code {
+            padding: 1rem;
+            color: #c9d1d9;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.5;
+        }
+
+        .kw {
+            color: #ff7b72;
+        }
+
+        /* Keyword */
+        .fn {
+            color: #d2a8ff;
+        }
+
+        /* Function */
+        .cm {
+            color: #8b949e;
+            font-style: italic;
+        }
+
+        /* Comment */
+        .str {
+            color: #a5d6ff;
+        }
+
+        /* String */
+
+        /* --- SDG TAGS --- */
+        .sdg-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .sdg-tag {
+            font-size: 0.7rem;
+            color: #fff;
+            background: linear-gradient(90deg, var(--accent-secondary), #c026d3);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        /* --- IMAGE GALLERY --- */
+        .img-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .img-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: 0.3s;
+        }
+
+        .img-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .img-card h3 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .img-card:hover img {
+            opacity: 1;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        @media(max-width: 800px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .bio-text {
+                border-left: none;
+                border-top: 3px solid var(--accent-primary);
+                padding-top: 1rem;
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="network-canvas"></canvas>
+
+    <div class="container">
+        <nav class="nav-bar">
+            <div class="brand">LB_PORTFOLIO</div>
+            <div class="path-display mono">root/users/lahari_the_boss/projects</div>
+        </nav>
+
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="role-label mono">PROJECT LEAD &bull; ALGORITHMIC ENG</div>
+                <h1>Lahari Bankar</h1>
+                <p class="bio-text">
+                    I am a 3rd-semester Computer Science and Engineering student at KLE Technological University, Hubli.
+                    I have a strong interest in solving real-world problems using algorithms, data structures, and
+                    software solutions. I enjoy applying theoretical knowledge to practical scenarios. My goal is to
+                    contribute to smart, sustainable, and technology-driven solutions that make everyday systems faster,
+                    safer, and more reliable.
+                </p>
+            </div>
+            <div class="id-card">
+                <div class="avatar-circle mono">LB</div>
+                <div class="mono" style="font-size: 0.9rem; color: #fff;">ID: 01FE24BCS274</div>
+                <div class="status-badge mono">ADMINISTRATOR</div>
+            </div>
+        </section>
+
+        <div class="section-header">
+            <h2 class="mono" style="color: var(--text-main); font-size: 1.4rem;">CORE_SYSTEMS</h2>
+            <div class="header-line"></div>
+        </div>
+
+        <div class="systems-wrapper">
+
+            <div class="data-block">
+                <div class="block-header">
+                    <div class="block-title">
+                        <span>💧</span>
+                        <h3>Tourism Optimization</h3>
+                    </div>
+                    <span class="status-pill mono">ACTIVE DEV</span>
+                </div>
+
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">01. Navigation & Route Finding</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> Finding the shortest path between the
+                                Stadium and Waterfalls is difficult without an optimized system, leading to delays for
+                                tourists.
+                            </p>
+                            <div class="solution-tag mono">SOL: Graph Algorithms (BFS & DFS)</div>
+                            <p class="problem-desc">
+                                <strong>BFS</strong> is used for calculating the shortest path from the city entrance to
+                                key spots.<br>
+                                <strong>DFS</strong> is used for exploring all connected areas like walking trails.
+                            </p>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">bfs_route.cpp</span>
+                                </div>
+                                <div class="terminal-code"><span class="cm">// BFS for Shortest Path</span>
+                                    <span class="kw">void</span> <span class="fn">BFS</span>(Node start) {
+                                    Queue q;
+                                    start.visited = <span class="kw">true</span>;
+                                    q.<span class="fn">add</span>(start);
+                                    //DFS function code -->
+                                    <span class="kw">while</span> (!q.isEmpty()) {
+                                    Node current = q.<span class="fn">removeFront</span>();
+                                    <span class="fn">visit</span>(current);
+                                    <span class="cm">// Visit neighbors logic...</span>
+                                    }
+                                    }
+                                </div>
+                            </div>
+                            <div class="sdg-container mono">
+                                <div class="sdg-tag">SDG 9: Innovation</div>
+                                <div class="sdg-tag">SDG 11: Sustainable Cities</div>
+                                <div class="sdg-tag">SDG 8: Decent Work</div>
+                                <div class="sdg-tag">SDG 13: Climate Action</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">02. Data Management (Hotels)</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> Tourists struggle to find cheapest hotels
+                                or top-rated lodges due to unorganized data.
+                            </p>
+                            <div class="solution-tag mono">SOL: Quick Sort (O(n log n))</div>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">sort_hotels.cpp</span>
+                                </div>
+                                <div class="terminal-code"><span class="kw">function</span> <span
+                                        class="fn">QuickSortHotels</span>(Hotels[], low, high) {
+                                    <span class="kw">if</span> (low < high) { <span class="kw">int</span> pIndex = <span
+                                            class="fn">Partition</span>(Hotels, low, high);
+                                        <span class="fn">QuickSortHotels</span>(Hotels, low, pIndex - 1);
+                                        <span class="fn">QuickSortHotels</span>(Hotels, pIndex + 1, high);
+                                        }
+                                        }
+                                </div>
+                            </div>
+                            <div class="sdg-container mono">
+                                <div class="sdg-tag">SDG 17: Partnerships</div>
+                                <div class="sdg-tag">SDG 11: Sustainable Cities</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">03. Crowd Prediction</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> Need to predict peak tourist days to manage
+                                security resources.
+                            </p>
+                            <div class="solution-tag mono">SOL: Heaps & String Matching</div>
+                            <p class="problem-desc">
+                                1. <strong>Max-Heap:</strong> Identify peak tourist days from historical data.<br>
+                                2. <strong>String Matching:</strong> Analyze search queries to predict trends.
+                            </p>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">crowd_pred.cpp</span>
+                                </div>
+                                <div class="terminal-code"><span class="fn">function</span>
+                                    GetTopKPeakDays(TouristData[], k):
+                                    <span class="fn">BuildMaxHeap</span>(TouristData)
+                                    topK = []
+                                    <span class="kw">for</span> i = 1 to k:
+                                    topK.<span class="fn">append</span>(TouristData[0]) <span class="cm"># root has max
+                                        value</span>
+                                    TouristData[0] = TouristData[end]
+                                    <span class="fn">MaxHeapify</span>(TouristData, 0, heap_size)
+                                    <span class="kw">return</span> topK
+
+                                    <span class="fn">function</span> CompareTomorrow(TouristData[], tomorrowCount):
+                                    maxToday = TouristData[0]
+                                    <span class="kw">if</span> tomorrowCount > maxToday:
+                                    <span class="kw">return</span> "Tomorrow expected higher crowd"
+                                    <span class="kw">else</span>:
+                                    <span class="kw">return</span> "Tomorrow crowd less than peak"
+                                </div>
+                            </div>
+                            <div class="sdg-container mono">
+                                <div class="sdg-tag">SDG 8: Economy</div>
+                                <div class="sdg-tag">SDG 9: Innovation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-block">
+                <div class="block-header">
+                    <div class="block-title">
+                        <span>⚡</span>
+                        <h3>Hydro-Power Station</h3>
+                    </div>
+                    <span class="status-pill mono">R&D PHASE</span>
+                </div>
+
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">01. Hydropower Data Lag</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> Real-time hydropower data becomes slow to
+                                access using normal structures. Inserting and searching large datasets in normal
+                                arrays/lists becomes too slow, making monitoring dashboards lag.
+                            </p>
+                            <div class="solution-tag mono">SOL: Red-Black Tree</div>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">tree_bal.cpp</span>
+                                </div>
+                                <div class="terminal-code"><span class="fn">function</span> InsertNode(root, reading):
+                                    <span class="kw">if</span> root == NULL: <span class="kw">return</span>
+                                    NewNode(reading)
+
+                                    <span class="kw">if</span> reading.timestamp < root.reading.timestamp:
+                                        root.left=<span class="fn">InsertNode</span>(root.left, reading)
+                                        <span class="kw">else</span>:
+                                        root.right = <span class="fn">InsertNode</span>(root.right, reading)
+
+                                        <span class="cm"># Rebalance the tree (RB Properties)</span>
+                                        root = <span class="fn">BalanceTree</span>(root)
+                                        <span class="kw">return</span> root
+                                </div>
+                            </div>
+                            <div class="sdg-container mono">
+                                <div class="sdg-tag">SDG 7: Clean Energy</div>
+                                <div class="sdg-tag">SDG 13: Climate Action</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">02. Optimizing Power Loss</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> High Transmission Loss. Electricity travels
+                                through long, high-resistance lines. During peak load, grid struggles to choose the path
+                                with lowest loss.
+                            </p>
+                            <div class="solution-tag mono">SOL: Dijkstra's Algorithm</div>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">flow_opt.cpp</span>
+                                </div>
+                                <div class="terminal-code"><span class="kw">while</span> MinHeap is not empty:
+                                    u = MinHeap.<span class="fn">extractMin</span>() <span class="cm"># Node with min
+                                        loss</span>
+                                    visited[u] = <span class="kw">true</span>
+
+                                    <span class="kw">for</span> each neighbor v of u:
+                                    <span class="kw">if</span> visited[v] == <span class="kw">false</span>:
+                                    alt = dist[u] + weight(u, v)
+                                    <span class="kw">if</span> alt < dist[v]: dist[v]=alt prev[v]=u MinHeap.<span
+                                        class="fn">insert</span>(v, dist[v])
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">03. Identifying Faulty Sensors</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> Manually searching for faulty sensor IDs in
+                                large logs is slow.
+                            </p>
+                            <div class="solution-tag mono">SOL: KMP (Knuth-Morris-Pratt)</div>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">sensor_scan.cpp</span>
+                                </div>
+                                <div class="terminal-code"><span class="cm">// KMP Pattern Searching</span>
+                                    <span class="kw">void</span> <span class="fn">KMPSearch</span>(<span
+                                        class="kw">char</span>* pat, <span class="kw">char</span>* txt) {
+                                    <span class="kw">int</span> M = <span class="fn">strlen</span>(pat);
+                                    <span class="kw">int</span> N = <span class="fn">strlen</span>(txt);
+                                    <span class="fn">computeLPSArray</span>(pat, M, lps);
+
+                                    <span class="kw">int</span> i = 0, j = 0;
+                                    <span class="kw">while</span> ((N - i) >= (M - j)) {
+                                    <span class="kw">if</span> (pat[j] == txt[i]) { j++; i++; }
+                                    <span class="kw">if</span> (j == M) {
+                                    <span class="fn">printf</span>(<span class="str">"Fault detected at %d"</span>, i -
+                                    j);
+                                    j = lps[j - 1];
+                                    }
+                                    <span class="kw">else if</span> (i < N && pat[j] !=txt[i]) { <span class="kw">
+                                        if</span> (j != 0) j = lps[j - 1];
+                                        <span class="kw">else</span> i++;
+                                        }
+                                        }
+                                        }
+                                </div>
+                            </div>
+                            <div class="sdg-container mono">
+                                <div class="sdg-tag">SDG 9: Industry</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-block">
+                <div class="block-header">
+                    <div class="block-title">
+                        <span>🙏</span>
+                        <h3>Religious Crowd Control</h3>
+                    </div>
+                    <span class="status-pill mono">DEPLOYED</span>
+                </div>
+
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">01. Live Zone Monitoring</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> Hard to detect overcrowded zones instantly.
+                                Linear search is too slow for live updates.
+                            </p>
+                            <div class="solution-tag mono">SOL: Segment Tree</div>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">zone_monitor.cpp</span>
+                                </div>
+                                <div class="terminal-code"><span class="fn">function</span> BuildSegmentTree(Crowd[],
+                                    start, end, tree[], node):
+                                    <span class="kw">if</span> start == end:
+                                    tree[node] = Crowd[start]
+                                    <span class="kw">return</span> tree[node]
+                                    mid = (start + end) / 2
+                                    tree[node] = <span class="fn">Build</span>(..., 2*node+1) + <span
+                                        class="fn">Build</span>(..., 2*node+2)
+                                    <span class="kw">return</span> tree[node]
+
+                                    <span class="fn">function</span> RangeQuery(tree[], start, end, l, r, node):
+                                    <span class="kw">if</span> l <= start and r>= end: <span class="kw">return</span>
+                                        tree[node] <span class="cm"># Overlap</span>
+                                        <span class="kw">if</span> r < start or l> end: <span class="kw">return</span> 0
+                                            <span class="cm"># No overlap</span>
+                                            mid = (start + end) / 2
+                                            <span class="kw">return</span> <span class="fn">RangeQuery</span>(...) +
+                                            <span class="fn">RangeQuery</span>(...)
+                                </div>
+                            </div>
+                            <div class="sdg-container mono">
+                                <div class="sdg-tag">SDG 16: Strong Institutions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-block">
+                                <div class="block-header">
+                                        <div class="block-title">
+                                                <span>🦌</span>
+                                                <h3>Wildlife Migration Safety</h3>
+                                            </div>
+                                        <span class="status-pill mono">DEPLOYED</span>
+                                    </div>
+
+                                <div class="expandable-item">
+                                        <div class="expandable-header">
+                                                <h4 class="problem-title mono">01. Safest Migration Route</h4>
+                                                <div class="expand-icon">+</div>
+                                            </div>
+                                        <div class="expandable-body">
+                                                <div class="inner-content">
+                                                        <p class="problem-desc">
+                                                                <strong style="color: #fff;">Issue:</strong> Identifying
+                                the path of lowest cumulative risk for migrating animals between forest zones,
+                                especially when some paths pass through unsafe areas (poaching, highways) which are
+                                assigned **negative risk values**.
+                                                            </p>
+                                                        <div class="solution-tag mono">SOL: Bellman-Ford Algorithm</div>
+                                                        <div class="terminal-block">
+                                                                <div class="terminal-header-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div> <span
+                                        style="color:#666; font-size:0.7em;">safest_route.alg</span>
+                                </div>
+                                                                <div class="terminal-code">for each zone z in Zones:
+                                        safeDist[z] = ∞
+                                        parent[z] = NIL
+
+                                    safeDist[sourceZone] = 0
+
+
+                                    <span class="cm"># Relaxation step (V-1 times)</span>
+                                    for i = 1 to Zones - 1:
+                                        for each path (u, v) in Paths:
+                                            if safeDist[u] + risk[u][v] < safeDist[v]:            
+                                        safeDist[v]=safeDist[u] + risk[u][v]             parent[v]=u <span class="cm">#
+                                        Negative Cycle Check (Detects risk spirals)</span>
+                                        for each path (u, v) in Paths:
+                                            if safeDist[u] + risk[u][v] < safeDist[v]:        
+                                            print "Unsafe zone cycle detected" </div>
+                                                                       
+                                </div>
+                                                            <div class="sdg-container mono">
+                                                                    <div class="sdg-tag">SDG 15: Life on Land</div>
+                                                                    <div class="sdg-tag">SDG 13: Climate Action</div>
+                                                                    <div class="sdg-tag">SDG 11: Sustainable Cities and
+                                        Communities</div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+            </div>
+
+            <div class="section-header">
+                <h2 class="mono" style="color: var(--text-main); font-size: 1.4rem;">VISUAL_GALLERY</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="img-container">
+                <div class="img-card">
+                    <h3>Tourist places</h3>
+                    <img src="./image11.png" alt="tourist image">
+                </div>
+                <div class="img-card">
+                    <h3>Hydro Power Station</h3>
+                    <img src="./image2.jpg" alt="hydroimage">
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            // --- ACCORDION LOGIC ---
+            document.querySelectorAll('.expandable-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    const body = item.querySelector('.expandable-body');
+                    item.classList.toggle('active');
+                    if (item.classList.contains('active')) {
+                        body.style.maxHeight = body.scrollHeight + "px";
+                    } else {
+                        body.style.maxHeight = 0;
+                    }
+                });
+            });
+
+            // --- CANVAS ANIMATION (Delaunay Triangulation) ---
+            const canvas = document.getElementById('network-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const particleCount = 60;
+            const connectionDistance = 150;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                }
+                update() {
+                    this.x += this.vx; this.y += this.vy;
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+            }
+
+            function init() {
+                particles = [];
+                for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = 'rgba(245, 158, 11, 0.5)';
+
+                for (let i = 0; i < particles.length; i++) {
+                    let p = particles[i];
+                    p.update();
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI * 2); ctx.fill();
+
+                    for (let j = i; j < particles.length; j++) {
+                        let p2 = particles[j];
+                        let dx = p.x - p2.x; let dy = p.y - p2.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < connectionDistance) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist / connectionDistance * 0.1})`;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                            // Triangulation fill
+                            for (let k = j; k < particles.length; k++) {
+                                let p3 = particles[k];
+                                let d2 = Math.sqrt((p2.x - p3.x) ** 2 + (p2.y - p3.y) ** 2);
+                                let d3 = Math.sqrt((p.x - p3.x) ** 2 + (p.y - p3.y) ** 2);
+                                if (d2 < connectionDistance && d3 < connectionDistance) {
+                                    ctx.beginPath();
+                                    ctx.fillStyle = `rgba(244, 63, 94, ${0.03 - dist / connectionDistance * 0.03})`;
+                                    ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y);
+                                    ctx.fill();
+                                }
+                            }
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+            init();
+            animate();
+        </script>
+</body>
+
+</html>
