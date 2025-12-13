@@ -837,63 +837,59 @@
             </div>
 
             <div class="data-block">
-                                <div class="block-header">
-                                        <div class="block-title">
-                                                <span>🦌</span>
-                                                <h3>Wildlife Migration Safety</h3>
-                                            </div>
-                                        <span class="status-pill mono">DEPLOYED</span>
-                                    </div>
+                <div class="block-header">
+                    <div class="block-title">
+                        <span>🦌</span>
+                        <h3>Wildlife Migration Safety</h3>
+                    </div>
+                    <span class="status-pill mono">DEPLOYED</span>
+                </div>
 
-                                <div class="expandable-item">
-                                        <div class="expandable-header">
-                                                <h4 class="problem-title mono">01. Safest Migration Route</h4>
-                                                <div class="expand-icon">+</div>
-                                            </div>
-                                        <div class="expandable-body">
-                                                <div class="inner-content">
-                                                        <p class="problem-desc">
-                                                                <strong style="color: #fff;">Issue:</strong> Identifying
-                                the path of lowest cumulative risk for migrating animals between forest zones,
-                                especially when some paths pass through unsafe areas (poaching, highways) which are
-                                assigned **negative risk values**.
-                                                            </p>
-                                                        <div class="solution-tag mono">SOL: Bellman-Ford Algorithm</div>
-                                                        <div class="terminal-block">
-                                                                <div class="terminal-header-dots">
+                <div class="expandable-item">
+                    <div class="expandable-header">
+                        <h4 class="problem-title mono">01. Safest Migration Route</h4>
+                        <div class="expand-icon">+</div>
+                    </div>
+                    <div class="expandable-body">
+                        <div class="inner-content">
+                            <p class="problem-desc">
+                                <strong style="color: #fff;">Issue:</strong> Identifying the path of lowest cumulative risk for migrating animals between forest zones, especially when some paths pass through unsafe areas (poaching, highways) which are assigned <strong>negative risk values</strong>.
+                            </p>
+                            <div class="solution-tag mono">SOL: Bellman-Ford Algorithm</div>
+                            <div class="terminal-block">
+                                <div class="terminal-header-dots">
                                     <div class="dot red"></div>
                                     <div class="dot yellow"></div>
-                                    <div class="dot green"></div> <span
-                                        style="color:#666; font-size:0.7em;">safest_route.alg</span>
+                                    <div class="dot green"></div>
+                                    <span style="color:#666; font-size:0.7em;">safest_route.alg</span>
                                 </div>
-                                                                <div class="terminal-code">for each zone z in Zones:
-                                        safeDist[z] = ∞
-                                        parent[z] = NIL
+                                <div class="terminal-code">for each zone z in Zones:
+    safeDist[z] = ∞
+    parent[z] = NIL
 
-                                    safeDist[sourceZone] = 0
+safeDist[sourceZone] = 0
 
+<span class="cm"># Relaxation step (V-1 times)</span>
+for i = 1 to Zones - 1:
+    for each path (u, v) in Paths:
+        if safeDist[u] + risk[u][v] &lt; safeDist[v]:
+            safeDist[v] = safeDist[u] + risk[u][v]
+            parent[v] = u
 
-                                    <span class="cm"># Relaxation step (V-1 times)</span>
-                                    for i = 1 to Zones - 1:
-                                        for each path (u, v) in Paths:
-                                            if safeDist[u] + risk[u][v] < safeDist[v]:            
-                                        safeDist[v]=safeDist[u] + risk[u][v]             parent[v]=u <span class="cm">#
-                                        Negative Cycle Check (Detects risk spirals)</span>
-                                        for each path (u, v) in Paths:
-                                            if safeDist[u] + risk[u][v] < safeDist[v]:        
-                                            print "Unsafe zone cycle detected" </div>
-                                                                       
-                                </div>
-                                                            <div class="sdg-container mono">
-                                                                    <div class="sdg-tag">SDG 15: Life on Land</div>
-                                                                    <div class="sdg-tag">SDG 13: Climate Action</div>
-                                                                    <div class="sdg-tag">SDG 11: Sustainable Cities and
-                                        Communities</div>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                </div>
+<span class="cm"># Negative Cycle Check (Detects risk spirals)</span>
+for each path (u, v) in Paths:
+    if safeDist[u] + risk[u][v] &lt; safeDist[v]:
+        print "Unsafe zone cycle detected"</div>
+                            </div>
+
+                            <div class="sdg-container mono">
+                                <div class="sdg-tag">SDG 15: Life on Land</div>
+                                <div class="sdg-tag">SDG 13: Climate Action</div>
+                                <div class="sdg-tag">SDG 11: Sustainable Cities and Communities</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="section-header">
