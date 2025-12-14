@@ -433,6 +433,185 @@
             opacity: 1;
         }
 
+        /* --- SUMMARY TERMINAL STYLES --- */
+.summary-terminal {
+    background: #0f172a; /* Dark Blue Background */
+    border: 1px solid #334155;
+    border-radius: 8px;
+    margin: 40px auto;
+    max-width: 1200px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+}
+
+.terminal-bar {
+    background: #1e293b;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+}
+
+.terminal-bar .btns {
+    display: flex;
+    gap: 6px;
+    margin-right: 15px;
+}
+
+.terminal-bar .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.red { background: #ef4444; }
+.yellow { background: #eab308; }
+.green { background: #22c55e; }
+
+.terminal-bar .title {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.summary-content {
+    padding: 25px;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    border-left: 2px solid #334155;
+    padding-left: 20px;
+}
+
+.report-item h4 {
+    margin: 0 0 10px 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.justification {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #ef4444; /* Red for Problem */
+    margin-right: 5px;
+}
+
+.label.active {
+    color: #22c55e; /* Green for Solution */
+    margin-top: 8px;
+    display: block; 
+}
+
+.blinking-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 15px;
+    background: #22d3ee;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* --- FOOTER / UPLINK STYLES --- */
+.uplink-section {
+    margin-top: 80px;
+    padding: 20px;
+    position: relative;
+    background: linear-gradient(to top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0));
+}
+
+.uplink-border {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+    margin-bottom: 30px;
+    opacity: 0.5;
+}
+
+.uplink-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.uplink-left h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.connection-nodes {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.node-link {
+    color: #22d3ee;
+    text-decoration: none;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    padding: 5px;
+}
+
+.node-link:hover {
+    opacity: 1;
+    text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+}
+
+.download-btn {
+    display: inline-block;
+    background: rgba(34, 211, 238, 0.05);
+    border: 1px solid #22d3ee;
+    padding: 12px 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+    background: rgba(34, 211, 238, 0.15);
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #22d3ee;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.system-footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #475569;
+    margin-top: 50px;
+}
+
+/* Helper Class */
+.cyan { color: #22d3ee; }
+.mono { font-family: 'Courier New', monospace; }
+
         @keyframes fadeUp {
             to {
                 opacity: 1;
@@ -904,12 +1083,90 @@ for each path (u, v) in Paths:
                 </div>
                 <div class="img-card">
                     <h3>Hydro Power Station</h3>
-                    <img src="./image2.jpg" alt="hydroimage">
+                    <img src="./image2.png" alt="hydroimage">
                 </div>
+            </div>
+
+            <span class="section-label" style="margin-top: 3rem;">03 // RUNTIME_JUSTIFICATION</span>
+
+<div class="summary-terminal">
+    <div class="terminal-bar">
+        <div class="btns">
+            <span class="circle red"></span>
+            <span class="circle yellow"></span>
+            <span class="circle green"></span>
+        </div>
+        <div class="title mono">admin@city_optimization:~/impact_report.log</div>
+    </div>
+    
+    <div class="summary-content">
+        <p class="mono" style="color: #64748b; margin-bottom: 1rem;">> Analyzing Algorithmic Efficiency...</p>
+
+        <div class="report-grid">
+            
+            <div class="report-item">
+                <h4 class="mono cyan">01. TOURISM (Heaps & Sorts)</h4>
+                <p class="justification">
+                    <span class="label">PROBLEM:</span> Unsorted hotel data creates search friction. Visitors abandon apps if they can't filter by price/rating instantly.<br>
+                    <span class="label active">SOLUTION:</span> <strong>QuickSort (O(N log N))</strong> & <strong>Max-Heaps</strong> ensure high-value options are surfaced immediately, directly increasing local economic revenue (SDG 8).
+                </p>
+            </div>
+
+            <div class="report-item">
+                <h4 class="mono cyan">02. HYDRO GRID (RB-Trees)</h4>
+                <p class="justification">
+                    <span class="label">PROBLEM:</span> Grid sensors generate massive data streams. Standard arrays are too slow for real-time fault insertion/lookup.<br>
+                    <span class="label active">SOLUTION:</span> <strong>Red-Black Trees</strong> guarantee balanced O(log N) operations. This prevents data lag, allowing the grid to react to power surges before a blackout occurs.
+                </p>
+            </div>
+
+            <div class="report-item">
+                <h4 class="mono cyan">03. CROWD SAFETY (Segment Trees)</h4>
+                <p class="justification">
+                    <span class="label">PROBLEM:</span> In massive religious gatherings, calculating density zone-by-zone linearly is too slow to prevent stampedes.<br>
+                    <span class="label active">SOLUTION:</span> <strong>Segment Trees</strong> allow O(log N) range queries. Security teams can instantly identify "Red Zones" and divert flow, saving lives (SDG 16).
+                </p>
+            </div>
+
+            <div class="report-item">
+                <h4 class="mono cyan">04. WILDLIFE (Bellman-Ford)</h4>
+                <p class="justification">
+                    <span class="label">PROBLEM:</span> Shortest paths aren't always safe. Some routes have "negative weights" (high poaching risk/traps).<br>
+                    <span class="label active">SOLUTION:</span> <strong>Bellman-Ford</strong> detects these risk cycles. It calculates the path of <em>least cumulative danger</em>, ensuring safe migration corridors for endangered species (SDG 15).
+                </p>
             </div>
 
         </div>
 
+        <p class="mono" style="color: #22d3ee; margin-top: 1rem;">> OPTIMIZATION STATUS: STABLE [100%]</p>
+        <div class="blinking-cursor">_</div>
+    </div>
+</div>
+
+        </div>
+<footer class="uplink-section">
+    <div class="uplink-border"></div>
+    
+    <div class="uplink-content">
+        <div class="uplink-left">
+            <h3 class="mono" style="color: #fff;">ESTABLISH_UPLINK</h3>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin: 10px 0;">
+                Deploying sustainable algorithms for smart cities. Initiate contact protocol.
+            </p>
+            
+            <div class="connection-nodes">
+                <a href="https://www.sciencedirect.com/science/article/abs/pii/S22119736203009" class="node-link mono">[Tourist_PROTOCOL]</a>
+                <a href="https://www.hydrogrid.ai/blog/real-time-inflow-predictions-hydropower" class="node-link mono">[Hydro_NODE]</a>
+                <a href="https://indianexpress.com/article/explained/wild-animals-safety-bandipur-tiger-reserve-karnataka-night-traffic-ban-national-highway-5292919/" class="node-link mono">[Wildlife_Protocol]</a>
+            </div>
+        </div>
+
+        
+
+    <div class="system-footer mono">
+        LB_PORTFOLIO v2.0 // SUSTAINABILITY MODULES LOADED...
+    </div>
+</footer>
         <script>
             // --- ACCORDION LOGIC ---
             document.querySelectorAll('.expandable-header').forEach(header => {
